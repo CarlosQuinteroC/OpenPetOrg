@@ -1,0 +1,71 @@
+schema: spec-driven
+project: petOrg
+persistence: openspec
+initialized: 2026-06-10
+strict_tdd: false
+
+context: |
+  Project idea: fullstack open-source platform for animal welfare foundations, mainly in Colombia.
+  Current repo state: Backend/ and Frontend/ directories exist but contain no project files.
+  Tech stack: not selected yet; no package, module, framework, or CI files detected.
+  Architecture: not established yet; app code has not been bootstrapped.
+  Testing: no test runner detected; Strict TDD disabled until a stack/test runner exists.
+  Cost constraint: architecture, frontend, backend, and CI/CD decisions must prioritize very low operating cost.
+
+testing:
+  strict_tdd: false
+  detected: 2026-06-10
+  runner:
+    available: false
+    command: ""
+    framework: ""
+  layers:
+    unit:
+      available: false
+      tool: ""
+    integration:
+      available: false
+      tool: ""
+    e2e:
+      available: false
+      tool: ""
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter:
+      available: false
+      command: ""
+    type_checker:
+      available: false
+      command: ""
+    formatter:
+      available: false
+      command: ""
+
+rules:
+  proposal:
+    - Define the first slice around foundation case administration and donor transparency before choosing implementation details.
+    - Explicitly evaluate low-cost hosting, storage, CI/CD, and maintenance tradeoffs.
+    - Identify Colombia-specific operational assumptions without treating them as legal advice.
+  specs:
+    - Use Given/When/Then scenarios.
+    - Use RFC 2119 keywords: MUST, SHOULD, MAY.
+    - Keep donation reporting and animal case progress traceable to business outcomes.
+  design:
+    - Document cost, operational complexity, maintainability, and open-source contribution tradeoffs.
+    - Prefer simple, observable architecture before adding integrations such as social extraction or crowdfunding providers.
+  tasks:
+    - Slice work into reviewable units suitable for limited maintainer time.
+    - Include testing setup before implementation once a stack is selected.
+  apply:
+    tdd: false
+    test_command: ""
+    notes:
+      - Do not implement app code until proposal, specs, design, and tasks exist.
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Preserve archived change folders as audit history.

@@ -1,1 +1,9 @@
 .atl/
+
+# .NET
+**/bin/
+**/obj/
+
+# Frontend
+Frontend/node_modules/
+Frontend/dist/

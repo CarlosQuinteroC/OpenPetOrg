@@ -19,5 +19,5 @@ docker run --name $ContainerName `
 Write-Host "PostgreSQL container '$ContainerName' started on port $port." -ForegroundColor Green
 Write-Host "Connection string: Host=localhost;Port=$port;Database=$Database;Username=$Username;Password=$Password" -ForegroundColor Yellow
 Write-Host ""
-Write-Host "Note: Npgsql EF Core provider for net10 is currently preview-only (11.0.0-preview.1)." -ForegroundColor Yellow
-Write-Host "Current scaffold keeps a provider-agnostic migration placeholder until stable provider support is selected." -ForegroundColor Yellow
+Write-Host "Using stable EF Core 9 + Npgsql 9 provider on net9." -ForegroundColor Yellow
+Write-Host "If migrations fail, validate ConnectionStrings:Default and ensure PostgreSQL is reachable." -ForegroundColor Yellow

@@ -1,7 +1,9 @@
-import { createContext, useMemo, type PropsWithChildren } from 'react';
+import { useMemo, type PropsWithChildren } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
-import { createAuthClient, type AuthClient } from './auth/authClient';
+import { createAuthClient } from './auth/authClient';
+import { ApiProvider } from '../services/api/context';
+import { AuthClientContext } from './auth/authContext';
 
 const defaultTheme = createTheme({
   palette: {
@@ -11,8 +13,6 @@ const defaultTheme = createTheme({
     },
   },
 });
-
-export const AuthClientContext = createContext<AuthClient | null>(null);
 
 function AuthProvider({ children }: PropsWithChildren) {
   const authClient = useMemo(() => createAuthClient(), []);
@@ -29,7 +29,9 @@ export function AppProviders({ children }: PropsWithChildren) {
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <BrowserRouter>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ApiProvider>{children}</ApiProvider>
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

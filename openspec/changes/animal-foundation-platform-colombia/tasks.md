@@ -37,26 +37,26 @@ Chain strategy: feature-branch-chain
 
 ## Phase 2: Backend Core Implementation (PR2)
 
-- [ ] 2.1 Implement donation controller/service/repository + DTO binding in `Backend/src/PetOrg.Modules.Donations/{Endpoints,Application,Infrastructure,Contracts}/`.
-- [ ] 2.2 Implement reconciliation controller/service/repository flow in `Backend/src/PetOrg.Modules.Reconciliation/` for unique-match confirm and ambiguous exceptions.
-- [ ] 2.3 Implement recurring lifecycle handlers in `Backend/src/PetOrg.Modules.Recurring/Application/` and persistence updates in `PetOrg.Infrastructure.Persistence`.
-- [ ] 2.4 Implement consent audit and donor recognition visibility flow in `Backend/src/PetOrg.Modules.Consent/` with immutable history.
-- [ ] 2.5 Implement receipt final-issuance gate in `Backend/src/PetOrg.Modules.Receipts/Application/IssueFinalReceiptHandler.cs` (confirmed-only rule).
+- [x] 2.1 Implement donation controller/service/repository + DTO binding in `Backend/src/PetOrg.Modules.Donations/{Endpoints,Application,Infrastructure,Contracts}/`.
+- [x] 2.2 Implement reconciliation controller/service/repository flow in `Backend/src/PetOrg.Modules.Reconciliation/` for unique-match confirm and ambiguous exceptions.
+- [x] 2.3 Implement recurring lifecycle handlers in `Backend/src/PetOrg.Modules.Recurring/Application/` and persistence updates in `PetOrg.Infrastructure.Persistence`.
+- [x] 2.4 Implement consent audit and donor recognition visibility flow in `Backend/src/PetOrg.Modules.Consent/` with immutable history.
+- [x] 2.5 Implement receipt final-issuance gate in `Backend/src/PetOrg.Modules.Receipts/Application/IssueFinalReceiptHandler.cs` (confirmed-only rule).
 
 ## Phase 3: Backend Testing + API Documentation Gate (PR3)
 
-- [ ] 3.1 Add integration tests in `Backend/tests/PetOrg.IntegrationTests/{Auth,Donations,Reconciliation}/` for spec scenarios (access control, hybrid intake, ambiguous match).
-- [ ] 3.2 Add unit tests in `Backend/tests/PetOrg.UnitTests/{Recurring,Consent,Receipts,Timeline}/` for lifecycle, consent audit, receipt gate, and timeline separation.
-- [ ] 3.3 Integrate Swagger in `Backend/src/PetOrg.Api/Program.cs` and `Backend/src/PetOrg.Api/Swagger/` with endpoint examples and auth scheme.
-- [ ] 3.4 Publish Postman artifacts in `docs/api/postman/animal-foundation-platform-colombia.postman_collection.json` and `docs/api/postman/README.md` from tested endpoints.
-- [ ] 3.5 Gate: mark frontend start only after `dotnet test` passes and Swagger + Postman docs are reviewed.
+- [x] 3.1 Add integration tests in `Backend/tests/PetOrg.IntegrationTests/{Auth,Donations,Reconciliation}/` for spec scenarios (access control, hybrid intake, ambiguous match).
+- [x] 3.2 Add unit tests in `Backend/tests/PetOrg.UnitTests/{Recurring,Consent,Receipts,Timeline}/` for lifecycle, consent audit, receipt gate, and timeline separation.
+- [x] 3.3 Integrate Swagger in `Backend/src/PetOrg.Api/Program.cs` and `Backend/src/PetOrg.Api/Swagger/` with endpoint examples and auth scheme.
+- [x] 3.4 Publish Postman artifacts in `docs/api/postman/animal-foundation-platform-colombia.postman_collection.json` and `docs/api/postman/README.md` from tested endpoints.
+- [x] 3.5 Gate: mark frontend start only after `dotnet test` passes and Swagger + Postman docs are reviewed.
 
 ## Phase 4: Frontend Integration After Backend Baseline (PR4)
 
-- [ ] 4.1 Implement `Frontend/src/features/donations/DonationFormPage.tsx` using documented donation endpoint contracts.
-- [ ] 4.2 Implement `Frontend/src/features/reconciliation/ReconciliationQueuePage.tsx` and `dashboard/DonorDashboardPage.tsx` against backend DTOs.
-- [ ] 4.3 Implement `Frontend/src/features/animal-cases/AnimalCaseTimelinePage.tsx` with separated timeline views.
-- [ ] 4.4 Add `Frontend/src/services/api/` typed clients aligned with Swagger schema and Postman examples.
+- [x] 4.1 Implement `Frontend/src/features/donations/DonationFormPage.tsx` using documented donation endpoint contracts.
+- [x] 4.2 Implement `Frontend/src/features/reconciliation/ReconciliationQueuePage.tsx` and `dashboard/DonorDashboardPage.tsx` against backend DTOs.
+- [x] 4.3 Implement `Frontend/src/features/animal-cases/AnimalCaseTimelinePage.tsx` with separated timeline views.
+- [x] 4.4 Add `Frontend/src/services/api/` typed clients aligned with Swagger schema and Postman examples.
 
 ## Phase 5: Cleanup / Documentation (PR5)
 

@@ -7,3 +7,6 @@
 # Frontend
 Frontend/node_modules/
 Frontend/dist/
+
+# IDE / workspace
+**/.vs/

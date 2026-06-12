@@ -8,6 +8,22 @@ This document defines the backend verification + API docs gate required before f
 - UI: `/swagger`
 - Auth: `Bearer` JWT configured in Swagger security scheme.
 
+### Swagger Authorize (PR5 Keycloak Touchpoint)
+
+For local Keycloak-enabled flow:
+
+1. Obtain a Keycloak access token for realm `petorg-dev` and audience `petorg-api`.
+2. Open Swagger UI (`/swagger`) and click **Authorize**.
+3. Paste token as `Bearer {access_token}`.
+4. Call `GET /api/me` to confirm role claims (`Donor` or `Staff`) are present.
+5. Call protected endpoints and verify role policy behavior (`StaffOnly` currently enforced on most module routes).
+
+Backend auth config touchpoints used by this flow:
+
+- `Backend/src/PetOrg.Api/appsettings*.json` → `Authentication:ManagedIdentity`
+- `Backend/src/PetOrg.Api/Program.cs` → JWT bearer validation + role claim enrichment
+- `Backend/src/PetOrg.Api/Security/ManagedIdentityOptions.cs` → issuer/audience/role mapping settings
+
 ## Test Gate
 
 Run:

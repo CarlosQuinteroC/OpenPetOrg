@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react'
 import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { DonationFormPage } from './features/donations/DonationFormPage'
 import { ReconciliationQueuePage } from './features/reconciliation/ReconciliationQueuePage'
 import { DonorDashboardPage } from './features/dashboard/DonorDashboardPage'
 import { AnimalCaseTimelinePage } from './features/animal-cases/AnimalCaseTimelinePage'
+import { useAuthClient } from './app/auth/useAuthClient'
+import type { AuthUser } from './app/auth/authClient'
 
 const navItems = [
   { to: '/donations/new', label: 'Donation Intake' },
@@ -14,6 +17,27 @@ const navItems = [
 
 function Navigation() {
   const location = useLocation()
+  const authClient = useAuthClient()
+  const [user, setUser] = useState<AuthUser | null>(null)
+
+  useEffect(() => {
+    let active = true
+
+    authClient
+      .getCurrentUser()
+      .then((currentUser) => {
+        if (active) {
+          setUser(currentUser)
+        }
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to load current user.', error)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [authClient])
 
   return (
     <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -36,6 +60,21 @@ function Navigation() {
             </Button>
           )
         })}
+        <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            {user ? `${user.id} (${user.roles.join(', ') || 'No roles'})` : 'Anonymous'}
+          </Typography>
+          {authClient.isEnabled() ? (
+            <>
+              <Button size="small" variant="text" onClick={() => void authClient.login()}>
+                Login
+              </Button>
+              <Button size="small" variant="outlined" onClick={() => void authClient.logout()}>
+                Logout
+              </Button>
+            </>
+          ) : null}
+        </Box>
       </Toolbar>
     </AppBar>
   )

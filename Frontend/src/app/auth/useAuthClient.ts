@@ -1,7 +1,8 @@
 import { useContext } from 'react'
 import { AuthClientContext } from './authContext'
+import type { AuthClient } from './authClient'
 
-export function useAuthClient() {
+export function useAuthClient(): AuthClient {
   const authClient = useContext(AuthClientContext)
 
   if (!authClient) {

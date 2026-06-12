@@ -22,6 +22,14 @@ export class ApiClient {
 
   async request<TResponse>(path: string, options?: RequestOptions): Promise<TResponse> {
     const token = await this.authClient.getAccessToken()
+
+    if (this.authClient.isEnabled() && !token) {
+      throw {
+        status: 401,
+        message: 'Authentication is required before calling protected APIs.',
+      } as ApiError
+    }
+
     const headers = new Headers({
       Accept: 'application/json',
     })

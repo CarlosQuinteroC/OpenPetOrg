@@ -1,4 +1,4 @@
-import { useMemo, type PropsWithChildren } from 'react';
+import { useEffect, useMemo, type PropsWithChildren } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { createAuthClient } from './auth/authClient';
@@ -16,6 +16,12 @@ const defaultTheme = createTheme({
 
 function AuthProvider({ children }: PropsWithChildren) {
   const authClient = useMemo(() => createAuthClient(), []);
+
+  useEffect(() => {
+    authClient.getCurrentUser().catch((error: unknown) => {
+      console.error('Failed to initialize auth session.', error);
+    });
+  }, [authClient]);
 
   return (
     <AuthClientContext.Provider value={authClient}>

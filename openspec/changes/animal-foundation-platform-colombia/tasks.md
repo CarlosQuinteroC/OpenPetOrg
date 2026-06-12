@@ -4,10 +4,10 @@
 
 | Field | Value |
 |-------|-------|
-| Estimated changed lines | 1,800–2,500 |
+| Estimated changed lines | 2,200–3,000 |
 | 400-line budget risk | High |
 | Chained PRs recommended | Yes |
-| Suggested split | PR 1 → PR 2 → PR 3 → PR 4 → PR 5 |
+| Suggested split | PR 1 → PR 2 → PR 3 → PR 4 → PR 5 → PR 6 |
 | Delivery strategy | ask-on-risk |
 | Chain strategy | feature-branch-chain |
 
@@ -21,44 +21,39 @@ Chain strategy: feature-branch-chain
 | Unit | Goal | Likely PR | Notes |
 |------|------|-----------|-------|
 | 1 | Foundation scaffold baseline (completed) | PR 1 ✅ | Base = feature/tracker branch |
-| 2 | Backend domain + API layering (controllers/services/repositories + DTOs + EF) | PR 2 | Base = PR 1 branch; backend only |
-| 3 | Backend verification + Swagger + Postman artifacts | PR 3 | Base = PR 2 branch; backend docs/tests gate |
-| 4 | Frontend integration against documented API contracts | PR 4 | Base = PR 3 branch; starts only after Unit 3 |
-| 5 | Final docs/runbooks and MVP boundary hardening | PR 5 | Base = PR 4 branch |
+| 2 | Backend domain + API layering (completed) | PR 2 ✅ | Base = PR 1 branch |
+| 3 | Backend tests + Swagger/Postman gate (completed) | PR 3 ✅ | Base = PR 2 branch |
+| 4 | Frontend feature integration baseline (completed) | PR 4 ✅ | Base = PR 3 branch |
+| 5 | Keycloak integration (dev IdP + backend JWT + frontend auth + bearer wiring) | PR 5 | Base = PR 4 branch; auth slice only |
+| 6 | Auth docs/runbooks + minimal E2E auth verification + remaining cleanup docs | PR 6 | Base = PR 5 branch |
 
 ## Phase 1: Foundation / Infrastructure (Completed PR1)
 
-- [x] 1.1 Create `Backend/PetOrg.sln` with `Backend/src/PetOrg.Api`, `PetOrg.Modules.*`, and `PetOrg.Infrastructure.Persistence` projects.
-- [x] 1.2 Implement `Backend/src/PetOrg.Api/Program.cs` with managed IdP JWT auth and Donor/Staff authorization policies.
-- [x] 1.3 Add `Backend/src/PetOrg.Infrastructure.Persistence/PetOrgDbContext.cs` and EF mappings for donations, recurring, consent, receipts, and animal cases.
-- [x] 1.4 Add `Backend/src/PetOrg.Infrastructure.Persistence/Entities/DonationTimelineEvent.cs` and `.../AnimalCaseTimelineEvent.cs`.
-- [x] 1.5 Create `Backend/src/PetOrg.Infrastructure.Persistence/Migrations/*_InitialMvp.cs` and `Backend/scripts/dev-up.ps1`.
-- [x] 1.6 Bootstrap frontend baseline in `Frontend/package.json`, `Frontend/vite.config.ts`, `Frontend/src/main.tsx`, and `Frontend/src/app/providers.tsx`.
+- [x] 1.1 Baseline solution, API host, persistence, migrations, and frontend app shell created under `Backend/` and `Frontend/`.
 
-## Phase 2: Backend Core Implementation (PR2)
+## Phase 2: Backend Core Implementation (Completed PR2)
 
-- [x] 2.1 Implement donation controller/service/repository + DTO binding in `Backend/src/PetOrg.Modules.Donations/{Endpoints,Application,Infrastructure,Contracts}/`.
-- [x] 2.2 Implement reconciliation controller/service/repository flow in `Backend/src/PetOrg.Modules.Reconciliation/` for unique-match confirm and ambiguous exceptions.
-- [x] 2.3 Implement recurring lifecycle handlers in `Backend/src/PetOrg.Modules.Recurring/Application/` and persistence updates in `PetOrg.Infrastructure.Persistence`.
-- [x] 2.4 Implement consent audit and donor recognition visibility flow in `Backend/src/PetOrg.Modules.Consent/` with immutable history.
-- [x] 2.5 Implement receipt final-issuance gate in `Backend/src/PetOrg.Modules.Receipts/Application/IssueFinalReceiptHandler.cs` (confirmed-only rule).
+- [x] 2.1 Donations, reconciliation, recurring, consent, and receipt modules implemented in `Backend/src/PetOrg.Modules.*/`.
 
-## Phase 3: Backend Testing + API Documentation Gate (PR3)
+## Phase 3: Backend Verification Gate (Completed PR3)
 
-- [x] 3.1 Add integration tests in `Backend/tests/PetOrg.IntegrationTests/{Auth,Donations,Reconciliation}/` for spec scenarios (access control, hybrid intake, ambiguous match).
-- [x] 3.2 Add unit tests in `Backend/tests/PetOrg.UnitTests/{Recurring,Consent,Receipts,Timeline}/` for lifecycle, consent audit, receipt gate, and timeline separation.
-- [x] 3.3 Integrate Swagger in `Backend/src/PetOrg.Api/Program.cs` and `Backend/src/PetOrg.Api/Swagger/` with endpoint examples and auth scheme.
-- [x] 3.4 Publish Postman artifacts in `docs/api/postman/animal-foundation-platform-colombia.postman_collection.json` and `docs/api/postman/README.md` from tested endpoints.
-- [x] 3.5 Gate: mark frontend start only after `dotnet test` passes and Swagger + Postman docs are reviewed.
+- [x] 3.1 Integration/unit test suites and Swagger/Postman baseline docs delivered in `Backend/tests/` and `docs/api/`.
 
-## Phase 4: Frontend Integration After Backend Baseline (PR4)
+## Phase 4: Frontend Baseline Integration (Completed PR4)
 
-- [x] 4.1 Implement `Frontend/src/features/donations/DonationFormPage.tsx` using documented donation endpoint contracts.
-- [x] 4.2 Implement `Frontend/src/features/reconciliation/ReconciliationQueuePage.tsx` and `dashboard/DonorDashboardPage.tsx` against backend DTOs.
-- [x] 4.3 Implement `Frontend/src/features/animal-cases/AnimalCaseTimelinePage.tsx` with separated timeline views.
-- [x] 4.4 Add `Frontend/src/services/api/` typed clients aligned with Swagger schema and Postman examples.
+- [x] 4.1 Donation, reconciliation, dashboard, and animal-case views plus typed API clients implemented in `Frontend/src/`.
 
-## Phase 5: Cleanup / Documentation (PR5)
+## Phase 5: Keycloak Integration (PR5)
 
-- [ ] 5.1 Update `README.md` and `docs/mvp-boundaries.md` with backend-first workflow and social automation exclusion.
-- [ ] 5.2 Add `docs/runbooks/reconciliation-exceptions.md` and `docs/runbooks/receipt-issuance.md` with operator verification steps.
+- [ ] 5.1 Add Keycloak local dev bootstrap with realm/client seed docs in `deploy/keycloak/docker-compose.yml`, `deploy/keycloak/realm-export/`, and `docs/auth/keycloak-dev-setup.md`.
+- [ ] 5.2 Update backend JWT config for Keycloak realm/client and role claim mapping in `Backend/src/PetOrg.Api/Security/ManagedIdentityOptions.cs`, `Backend/src/PetOrg.Api/Program.cs`, and `Backend/src/PetOrg.Api/appsettings*.json`.
+- [ ] 5.3 Document backend role expectations (`Donor`, `Staff`) and token claim contract in `docs/auth/backend-role-mapping.md`.
+- [ ] 5.4 Implement frontend auth client using the existing `AuthClient` abstraction with Keycloak login/logout/token retrieval in `Frontend/src/app/auth/authClient.ts`, `Frontend/src/app/auth/useAuthClient.ts`, and `Frontend/src/app/providers.tsx`.
+- [ ] 5.5 Wire API bearer usage to real auth tokens in `Frontend/src/services/api/client.ts`, `Frontend/src/services/api/context.tsx`, and `Frontend/src/services/api/useApi.ts`.
+
+## Phase 6: Auth Verification + Remaining Docs (PR6)
+
+- [ ] 6.1 Add Swagger JWT authorize usage notes (Keycloak token flow + expected claim checks) in `docs/api/README.md`.
+- [ ] 6.2 Update Postman usage for Keycloak token retrieval/variable refresh in `docs/api/postman/README.md`.
+- [ ] 6.3 Add minimal E2E auth verification runbook for login, protected API call, role denial, and logout in `docs/runbooks/auth-e2e.md`.
+- [ ] 6.4 Complete pending cleanup docs in `README.md`, `docs/mvp-boundaries.md`, `docs/runbooks/reconciliation-exceptions.md`, and `docs/runbooks/receipt-issuance.md`.

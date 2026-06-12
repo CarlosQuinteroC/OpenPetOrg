@@ -33,6 +33,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = identity.Audience;
         options.RequireHttpsMetadata = identity.RequireHttpsMetadata;
         options.TokenValidationParameters.ValidIssuer = identity.ValidIssuer;
+        options.TokenValidationParameters.RoleClaimType = ClaimTypes.Role;
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                if (context.Principal?.Identity is not ClaimsIdentity claimsIdentity)
+                {
+                    return Task.CompletedTask;
+                }
+
+                var existingRoleClaims = claimsIdentity.FindAll(ClaimTypes.Role).Select(c => c.Value).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                JwtRoleClaimsMapper.Map(claimsIdentity, existingRoleClaims, context.Principal!, identity.RoleClaimType, identity.ResourceAccessClientId);
+
+                return Task.CompletedTask;
+            },
+        };
     });
 
 builder.Services.AddAuthorization(options =>

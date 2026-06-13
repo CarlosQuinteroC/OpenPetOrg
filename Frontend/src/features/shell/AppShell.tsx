@@ -1,6 +1,7 @@
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
+import { alpha, AppBar, Box, Button, Container, Stack, Toolbar, Typography, useTheme } from '@mui/material'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuthBootstrap } from '../../app/auth/authBootstrapContext'
+import { ThemeControls } from '../../app/theme/ThemeControls'
 
 const navItems = [
   { to: '/app/donations/new', label: 'Donation Intake' },
@@ -10,6 +11,7 @@ const navItems = [
 ]
 
 export function AppShell() {
+  const theme = useTheme()
   const location = useLocation()
   const {
     state: { identity },
@@ -23,6 +25,7 @@ export function AppShell() {
           <Typography variant="h6" sx={{ mr: 2 }}>
             PetOrg MVP
           </Typography>
+          <ThemeControls compact />
           {navItems.map((item) => {
             const isActive = location.pathname.startsWith(item.to)
 
@@ -33,6 +36,15 @@ export function AppShell() {
                 to={item.to}
                 variant={isActive ? 'contained' : 'text'}
                 size="small"
+                sx={
+                  isActive
+                    ? {
+                        '&:hover': {
+                          backgroundColor: 'primary.main',
+                        },
+                      }
+                    : undefined
+                }
               >
                 {item.label}
               </Button>
@@ -63,7 +75,17 @@ export function AppShell() {
           ) : null}
         </Stack>
 
-        <Outlet />
+        <Box
+          sx={{
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 2,
+            p: 2,
+            backgroundColor: alpha(theme.palette.background.paper, theme.palette.mode === 'dark' ? 0.9 : 1),
+          }}
+        >
+          <Outlet />
+        </Box>
       </Container>
     </>
   )

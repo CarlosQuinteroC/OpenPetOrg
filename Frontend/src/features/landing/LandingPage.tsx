@@ -1,12 +1,14 @@
-import { Box, Button, Container, Link as MuiLink, Stack, Typography } from '@mui/material'
+import { alpha, Box, Button, Container, Link as MuiLink, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuthClient } from '../../app/auth/useAuthClient'
 import { resolveSafeAppPath } from '../../app/routing/safeRedirect'
+import { ThemeControls } from '../../app/theme/ThemeControls'
 
 export function LandingPage() {
   const authClient = useAuthClient()
   const location = useLocation()
+  const theme = useTheme()
 
   const loginTarget = useMemo(() => {
     const params = new URLSearchParams(location.search)
@@ -16,15 +18,30 @@ export function LandingPage() {
   const loginDisabled = !authClient.isEnabled()
 
   return (
-    <Box component="main" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      component="main"
+      sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}
+    >
       <Box
         component="header"
-        sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+          backdropFilter: 'blur(4px)',
+          position: 'sticky',
+          top: 0,
+          zIndex: theme.zIndex.appBar,
+        }}
       >
-        <Container maxWidth="lg" sx={{ py: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="h6" component="p" sx={{ fontWeight: 700 }}>
+        <Container
+          maxWidth="lg"
+          sx={{ py: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}
+        >
+          <Typography variant="h6" component="p" sx={{ fontWeight: 700, letterSpacing: 0.2 }}>
             PetOrg
           </Typography>
+          <ThemeControls compact />
           <Button
             sx={{ ml: 'auto' }}
             variant="contained"
@@ -65,7 +82,16 @@ export function LandingPage() {
         </Stack>
       </Container>
 
-      <Box component="section" id="trust-signals" sx={{ borderTop: 1, borderColor: 'divider', py: 4 }}>
+      <Box
+        component="section"
+        id="trust-signals"
+        sx={{
+          borderTop: 1,
+          borderColor: 'divider',
+          py: 4,
+          bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.1 : 0.04),
+        }}
+      >
         <Container maxWidth="lg">
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
             <Stack spacing={0.5}>

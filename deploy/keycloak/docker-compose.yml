@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:16
+    container_name: petorg-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-petorg}
+      POSTGRES_USER: ${POSTGRES_USER:-petorg}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-petorg_dev_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - petorg-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-petorg} -d $${POSTGRES_DB:-petorg}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.7
     container_name: petorg-keycloak
@@ -6,9 +23,20 @@ services:
       - start-dev
       - --import-realm
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: ${POSTGRES_DB:-petorg}
+      KC_DB_USERNAME: ${POSTGRES_USER:-petorg}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-petorg_dev_password}
     ports:
-      - "8080:8080"
+      - "${KEYCLOAK_PORT:-8080}:8080"
     volumes:
       - ./realm-export:/opt/keycloak/data/import:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  petorg-postgres-data:

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PetOrg/PetOrg.csproj" />
+  <Project Path="PetOrg.Tests/PetOrg.Tests.csproj" />
+</Solution>

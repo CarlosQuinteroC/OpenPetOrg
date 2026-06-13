@@ -1,341 +1,100 @@
 {
   "info": {
-    "_postman_id": "f4ba9c4a-0cc5-46be-9d6a-5f1b66c70ee3",
-    "name": "PetOrg Animal Foundation Platform Colombia",
-    "description": "Backend API verification collection for PR3 (tests + documentation gate).",
+    "_postman_id": "d9c86f65-3d0a-4a4d-9b08-0f2f6a2a8b19",
+    "name": "PetOrg Local Auth",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Get current user",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Donations",
-      "item": [
-        {
-          "name": "Create donation",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"donorId\": \"{{donor_id}}\",\n  \"amount\": 120000,\n  \"currency\": \"COP\",\n  \"channel\": \"online\",\n  \"reference\": \"gw-transaction-001\",\n  \"occurredAt\": \"{{$isoTimestamp}}\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/donations",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "donations"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Donation created', function () { pm.response.to.have.status(201); });",
-                  "const json = pm.response.json();",
-                  "pm.environment.set('donation_id', json.donationId);"
-                ]
-              }
-            }
-          ],
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Reconciliation",
-      "item": [
-        {
-          "name": "Confirm unique donor match",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"matchedDonorId\": \"{{donor_id}}\",\n  \"evidenceNote\": \"Matched against bank transfer reference\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/reconciliation/{{donation_id}}/confirm",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "reconciliation",
-                "{{donation_id}}",
-                "confirm"
-              ]
-            }
-          },
-          "response": []
+      "name": "1) Get Token (staff.dev)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
         },
-        {
-          "name": "Mark ambiguous match",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"selectedDonorId\": \"{{donor_id}}\",\n  \"resolutionNote\": \"Manual review required due to duplicate donor attributes\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/reconciliation/{{donation_id}}/ambiguous",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "reconciliation",
-                "{{donation_id}}",
-                "ambiguous"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Recurring",
-      "item": [
-        {
-          "name": "Enroll recurring donor",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"donorId\": \"{{donor_id}}\",\n  \"amount\": 60000,\n  \"currency\": \"COP\",\n  \"startedOn\": \"2026-06-01\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/recurring",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "recurring"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "pm.environment.set('recurring_id', json.recurringDonationId);"
-                ]
-              }
-            }
-          ],
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Consent",
-      "item": [
-        {
-          "name": "Append public recognition consent",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"granted\": true,\n  \"effectiveAt\": \"{{$isoTimestamp}}\",\n  \"actorId\": \"staff-user-01\",\n  \"note\": \"Donor accepted disclosure\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/donors/{{donor_id}}/consent/public-recognition",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "donors",
-                "{{donor_id}}",
-                "consent",
-                "public-recognition"
-              ]
-            }
-          },
-          "response": []
+        "url": {
+          "raw": "{{keycloak_base}}/realms/{{realm}}/protocol/openid-connect/token",
+          "host": ["{{keycloak_base}}"],
+          "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
         },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "client_id", "value": "{{frontend_client_id}}", "type": "text" },
+            { "key": "grant_type", "value": "password", "type": "text" },
+            { "key": "username", "value": "{{username}}", "type": "text" },
+            { "key": "password", "value": "{{password}}", "type": "text" }
+          ]
+        }
+      },
+      "event": [
         {
-          "name": "Get public recognition visibility",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/donors/{{donor_id}}/public-recognition/visibility?at={{visibility_at}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "donors",
-                "{{donor_id}}",
-                "public-recognition",
-                "visibility"
-              ],
-              "query": [
-                {
-                  "key": "at",
-                  "value": "{{visibility_at}}"
-                }
-              ]
-            }
-          },
-          "response": []
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.test('Has access_token', function () {",
+              "  pm.expect(json.access_token).to.be.a('string');",
+              "});",
+              "pm.environment.set('access_token', json.access_token);"
+            ]
+          }
         }
       ]
     },
     {
-      "name": "Receipts",
-      "item": [
-        {
-          "name": "Issue final receipt",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{jwt_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"receiptNumber\": \"REC-2026-010\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/receipts/{{donation_id}}/issue-final",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "receipts",
-                "{{donation_id}}",
-                "issue-final"
-              ]
+      "name": "2) Get Current User (/api/me)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{access_token}}",
+              "type": "string"
             }
-          },
-          "response": []
+          ]
+        },
+        "url": {
+          "raw": "{{api_base}}/api/me",
+          "host": ["{{api_base}}"],
+          "path": ["api", "me"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
         }
       ]
     }
   ],
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:5000"
-    },
-    {
-      "key": "jwt_token",
-      "value": ""
-    },
-    {
-      "key": "donor_id",
-      "value": "11111111-1111-1111-1111-111111111111"
-    },
-    {
-      "key": "donation_id",
-      "value": ""
-    },
-    {
-      "key": "recurring_id",
-      "value": ""
-    },
-    {
-      "key": "visibility_at",
-      "value": "2026-06-11T00:00:00Z"
-    }
+    { "key": "keycloak_base", "value": "http://localhost:8080" },
+    { "key": "realm", "value": "petorg-dev" },
+    { "key": "frontend_client_id", "value": "petorg-frontend" },
+    { "key": "username", "value": "staff.dev" },
+    { "key": "password", "value": "Staff123!" },
+    { "key": "api_base", "value": "http://localhost:5299" },
+    { "key": "access_token", "value": "" }
   ]
 }

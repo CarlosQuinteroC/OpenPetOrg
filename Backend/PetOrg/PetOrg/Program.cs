@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var keycloakSection = builder.Configuration.GetSection(KeycloakOptions.SectionName);
 var keycloakOptions = keycloakSection.Get<KeycloakOptions>() ?? new KeycloakOptions();
+const string DefaultConnectionStringName = "Default";
+const string PostgresHealthCheckName = "postgres";
+const string ReadinessTag = "ready";
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -51,10 +54,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<PetOrgDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString(DefaultConnectionStringName)));
 builder.Services.AddScoped<IDatabaseConnectivityProbe, EfCoreDatabaseConnectivityProbe>();
 builder.Services.AddHealthChecks()
-    .AddCheck<DatabaseReadinessHealthCheck>("postgres", tags: ["ready"]);
+    .AddCheck<DatabaseReadinessHealthCheck>(PostgresHealthCheckName, tags: [ReadinessTag]);
 
 var app = builder.Build();
 
@@ -75,7 +78,7 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions
 });
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
-    Predicate = registration => registration.Tags.Contains("ready"),
+    Predicate = IsReadinessCheck,
     ResultStatusCodes =
     {
         [HealthStatus.Healthy] = StatusCodes.Status200OK,
@@ -85,5 +88,10 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
 });
 
 app.Run();
+
+static bool IsReadinessCheck(HealthCheckRegistration registration)
+{
+    return registration.Tags.Contains(ReadinessTag);
+}
 
 public partial class Program;

@@ -96,6 +96,6 @@ Result: `Passed: 3, Failed: 0`.
 
 ## Troubleshooting
 
-- `401` with seemingly valid token: verify `Authority`, `ValidIssuer`, and `Audience` in `Backend/src/PetOrg.Api/appsettings*.json`.
+- `401` with seemingly valid token: verify Keycloak authority, issuer, and audience in `Backend/PetOrg/PetOrg/appsettings*.json`.
 - `403` for expected staff flow: verify token includes `Staff` in `realm_access.roles` or `resource_access.petorg-api.roles`.
 - Token retrieval fails: confirm Keycloak container healthy and realm import completed.

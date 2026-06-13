@@ -1,6 +1,6 @@
 # Backend API Documentation Gate
 
-This document defines the API verification path used across PR3-PR6.
+This document defines the API verification path for the canonical `Backend/PetOrg/PetOrg` backend.
 
 ## Quick Path (Keycloak + Swagger)
 
@@ -8,7 +8,7 @@ This document defines the API verification path used across PR3-PR6.
 2. Sign in with seeded `staff.dev` / `Staff123!` and obtain an access token (audience `petorg-api`).
 3. Open `/swagger`, click **Authorize**, and paste `Bearer {access_token}`.
 4. Call `GET /api/me` and confirm role output includes `Staff` or `Donor`.
-5. Run one staff-protected endpoint (for example `POST /api/donations`) and confirm role policy behavior.
+5. Run the current authenticated readiness endpoint and confirm role policy behavior once auth readiness lands.
 
 ## Swagger
 
@@ -24,14 +24,14 @@ For local Keycloak flow:
 2. Open Swagger UI (`/swagger`) and click **Authorize**.
 3. Paste token as `Bearer {access_token}`.
 4. Call `GET /api/me` to confirm role claims (`Donor` or `Staff`) are present.
-5. Call protected endpoints and verify role policy behavior (`StaffOnly` enforced on module routes in current slice).
+5. Call protected endpoints and verify role policy behavior once auth readiness lands.
 6. If `401` appears, verify issuer/audience alignment in appsettings; if `403` appears, verify token roles.
 
 Backend auth config touchpoints used by this flow:
 
-- `Backend/src/PetOrg.Api/appsettings*.json` → `Authentication:ManagedIdentity`
-- `Backend/src/PetOrg.Api/Program.cs` → JWT bearer validation + role claim enrichment
-- `Backend/src/PetOrg.Api/Security/ManagedIdentityOptions.cs` → issuer/audience/role mapping settings
+- `Backend/PetOrg/PetOrg/appsettings*.json` → Keycloak/JWT settings
+- `Backend/PetOrg/PetOrg/Program.cs` → JWT bearer validation + role claim enrichment
+- `Backend/PetOrg/PetOrg/Services/Auth/*` → issuer/audience/role mapping settings once auth readiness lands
 
 ## Auth Claim Checks (Minimum)
 
@@ -58,8 +58,8 @@ dotnet test Backend/PetOrg.sln
 
 Expected baseline:
 
-- Integration tests for auth, donations, reconciliation pass.
-- Unit tests for recurring lifecycle, consent audit, receipt issuance gate, and timeline separation pass.
+- Canonical backend foundation tests pass.
+- Auth and database readiness tests pass once those slices land.
 
 ## Postman Artifacts
 

@@ -50,6 +50,40 @@ public sealed class CanonicalBackendFoundationTests
         Assert.Contains("condition: service_healthy", compose);
     }
 
+    [Fact]
+    public void OldGeneratedBackendStructureIsRemoved()
+    {
+        var repositoryRoot = GetRepositoryRoot();
+
+        Assert.False(Directory.Exists(Path.Combine(repositoryRoot, "Backend", "src")));
+        Assert.False(Directory.Exists(Path.Combine(repositoryRoot, "Backend", "tests", "PetOrg.UnitTests")));
+        Assert.False(Directory.Exists(Path.Combine(repositoryRoot, "Backend", "tests", "PetOrg.IntegrationTests")));
+    }
+
+    [Fact]
+    public void ActiveDocsAndScriptsDoNotReferenceOldBackendPaths()
+    {
+        var repositoryRoot = GetRepositoryRoot();
+        var docsFiles = Directory.EnumerateFiles(Path.Combine(repositoryRoot, "docs"), "*.*", SearchOption.AllDirectories);
+        var scriptsPath = Path.Combine(repositoryRoot, "Backend", "scripts");
+        var scriptFiles = Directory.Exists(scriptsPath)
+            ? Directory.EnumerateFiles(scriptsPath, "*.ps1", SearchOption.AllDirectories)
+            : [];
+
+        var filesToInspect = docsFiles.Concat(scriptFiles);
+
+        foreach (var file in filesToInspect)
+        {
+            var content = File.ReadAllText(file);
+
+            Assert.DoesNotContain("Backend/src", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(@"Backend\src", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(@"..\src", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Backend/tests", content, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain(@"Backend\tests", content, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
     private static string ReadRepositoryFile(params string[] pathSegments)
     {
         return File.ReadAllText(Path.Combine(GetRepositoryRoot(), Path.Combine(pathSegments)));

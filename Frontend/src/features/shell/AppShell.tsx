@@ -22,7 +22,7 @@ export function AppShell() {
     <>
       <AppBar position="sticky" color="inherit" elevation={0} sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Toolbar sx={{ gap: 1, flexWrap: 'wrap' }}>
-          <Typography variant="h6" sx={{ mr: 2 }}>
+          <Typography variant="h6" component="p" sx={{ mr: 2 }}>
             PetOrg MVP
           </Typography>
           <ThemeControls compact />

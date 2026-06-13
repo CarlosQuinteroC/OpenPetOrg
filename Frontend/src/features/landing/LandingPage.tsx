@@ -1,4 +1,4 @@
-import { alpha, Box, Button, Container, Link as MuiLink, Stack, Typography, useTheme } from '@mui/material'
+import { Alert, alpha, Box, Button, Container, Link as MuiLink, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuthClient } from '../../app/auth/useAuthClient'
@@ -48,6 +48,7 @@ export function LandingPage() {
             size="small"
             onClick={() => void authClient.login(loginTarget)}
             disabled={loginDisabled}
+            aria-label="Login"
           >
             Login
           </Button>
@@ -72,6 +73,7 @@ export function LandingPage() {
               variant="contained"
               onClick={() => void authClient.login(loginTarget)}
               disabled={loginDisabled}
+              aria-label="Continue with PetOrg Account"
             >
               Continue with PetOrg Account
             </Button>
@@ -79,6 +81,11 @@ export function LandingPage() {
               Why teams trust PetOrg
             </Button>
           </Stack>
+          {loginDisabled ? (
+            <Alert severity="warning" variant="outlined" sx={{ width: 'fit-content', maxWidth: '100%' }}>
+              Authentication is currently unavailable. Please contact support or try again later.
+            </Alert>
+          ) : null}
         </Stack>
       </Container>
 

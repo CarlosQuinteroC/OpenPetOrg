@@ -2,18 +2,7 @@ import { Box, Button, Container, Link as MuiLink, Stack, Typography } from '@mui
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuthClient } from '../../app/auth/useAuthClient'
-
-function resolveNextTarget(nextRaw: string | null): string {
-  if (!nextRaw) {
-    return '/app'
-  }
-
-  if (!nextRaw.startsWith('/app')) {
-    return '/app'
-  }
-
-  return nextRaw
-}
+import { resolveSafeAppPath } from '../../app/routing/safeRedirect'
 
 export function LandingPage() {
   const authClient = useAuthClient()
@@ -21,7 +10,7 @@ export function LandingPage() {
 
   const loginTarget = useMemo(() => {
     const params = new URLSearchParams(location.search)
-    return resolveNextTarget(params.get('next'))
+    return resolveSafeAppPath(params.get('next'))
   }, [location.search])
 
   const loginDisabled = !authClient.isEnabled()

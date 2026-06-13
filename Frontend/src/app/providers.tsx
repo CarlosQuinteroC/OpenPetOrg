@@ -1,9 +1,10 @@
-import { useEffect, useMemo, type PropsWithChildren } from 'react';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { BrowserRouter } from 'react-router-dom';
-import { createAuthClient } from './auth/authClient';
-import { ApiProvider } from '../services/api/context';
-import { AuthClientContext } from './auth/authContext';
+import { useMemo, type PropsWithChildren } from 'react'
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { BrowserRouter } from 'react-router-dom'
+import { createAuthClient } from './auth/authClient'
+import { ApiProvider } from '../services/api/context'
+import { AuthClientContext } from './auth/authContext'
+import { AuthBootstrapProvider } from './auth/AuthBootstrapProvider'
 
 const defaultTheme = createTheme({
   palette: {
@@ -12,22 +13,16 @@ const defaultTheme = createTheme({
       main: '#1565c0',
     },
   },
-});
+})
 
 function AuthProvider({ children }: PropsWithChildren) {
-  const authClient = useMemo(() => createAuthClient(), []);
-
-  useEffect(() => {
-    authClient.getCurrentUser().catch((error: unknown) => {
-      console.error('Failed to initialize auth session.', error);
-    });
-  }, [authClient]);
+  const authClient = useMemo(() => createAuthClient(), [])
 
   return (
     <AuthClientContext.Provider value={authClient}>
       {children}
     </AuthClientContext.Provider>
-  );
+  )
 }
 
 export function AppProviders({ children }: PropsWithChildren) {
@@ -36,9 +31,11 @@ export function AppProviders({ children }: PropsWithChildren) {
       <CssBaseline />
       <BrowserRouter>
         <AuthProvider>
-          <ApiProvider>{children}</ApiProvider>
+          <ApiProvider>
+            <AuthBootstrapProvider>{children}</AuthBootstrapProvider>
+          </ApiProvider>
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { useAuthClient } from '../../app/auth/useAuthClient'
+import { useAuthBootstrap } from '../../app/auth/authBootstrapContext'
 
 const navItems = [
   { to: '/app/donations/new', label: 'Donation Intake' },
@@ -11,7 +11,10 @@ const navItems = [
 
 export function AppShell() {
   const location = useLocation()
-  const authClient = useAuthClient()
+  const {
+    state: { identity },
+    logout,
+  } = useAuthBootstrap()
 
   return (
     <>
@@ -36,8 +39,8 @@ export function AppShell() {
             )
           })}
           <Box sx={{ ml: 'auto' }}>
-            {authClient.isEnabled() ? (
-              <Button size="small" variant="outlined" onClick={() => void authClient.logout()}>
+            {identity ? (
+              <Button size="small" variant="outlined" onClick={() => void logout()}>
                 Logout
               </Button>
             ) : null}
@@ -53,6 +56,11 @@ export function AppShell() {
           <Typography color="text.secondary">
             Frontend integration against backend contracts. MVP scope excludes social automation.
           </Typography>
+          {identity ? (
+            <Typography variant="body2" color="text.secondary">
+              Signed in as <strong>{identity.displayName}</strong>
+            </Typography>
+          ) : null}
         </Stack>
 
         <Outlet />

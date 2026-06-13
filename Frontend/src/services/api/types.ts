@@ -5,7 +5,8 @@ export type ApiError = {
 }
 
 export type ApiMeResponse = {
-  name?: string | null
+  subject: string
+  email: string | null
   roles: string[]
 }
 

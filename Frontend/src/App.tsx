@@ -6,14 +6,14 @@ import { DonorDashboardPage } from './features/dashboard/DonorDashboardPage'
 import { AnimalCaseTimelinePage } from './features/animal-cases/AnimalCaseTimelinePage'
 import { LandingPage } from './features/landing/LandingPage'
 import { AppShell } from './features/shell/AppShell'
-import { AppRouteBoundary } from './app/routing/AppRouteBoundary'
+import { ProtectedRoute } from './app/routing/ProtectedRoute'
 
 function App() {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/app" element={<AppRouteBoundary />}>
+        <Route path="/app" element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route index element={<Navigate to="donations/new" replace />} />
             <Route path="donations/new" element={<DonationFormPage />} />

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type PropsWithChildren } from 'react'
+import { useMemo, type PropsWithChildren } from 'react'
 import { ApiClient } from './client'
 import { PetOrgApi } from './petOrgApi'
 import { useAuthClient } from '../../app/auth/useAuthClient'
@@ -11,16 +11,6 @@ function getApiBaseUrl(): string {
 
 export function ApiProvider({ children }: PropsWithChildren) {
   const authClient = useAuthClient()
-
-  useEffect(() => {
-    if (!authClient.isEnabled()) {
-      return
-    }
-
-    authClient.getAccessToken().catch((error: unknown) => {
-      console.error('Unable to preload access token for API requests.', error)
-    })
-  }, [authClient])
 
   const api = useMemo(() => {
     const client = new ApiClient({

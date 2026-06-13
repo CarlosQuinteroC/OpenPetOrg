@@ -7,7 +7,7 @@ export type AuthUser = {
 
 export type AuthClient = {
   isEnabled: () => boolean;
-  login: () => Promise<void>;
+  login: (redirectPath?: string) => Promise<void>;
   logout: () => Promise<void>;
   getAccessToken: () => Promise<string | null>;
   getCurrentUser: () => Promise<AuthUser | null>;
@@ -49,13 +49,15 @@ class KeycloakAuthClient implements AuthClient {
     return this.env.enabled;
   }
 
-  async login(): Promise<void> {
+  async login(redirectPath?: string): Promise<void> {
     const keycloak = await this.getKeycloak();
     if (!keycloak) {
       return;
     }
 
-    await keycloak.login({ redirectUri: window.location.href });
+    const redirectUri = redirectPath ? new URL(redirectPath, window.location.origin).toString() : window.location.href;
+
+    await keycloak.login({ redirectUri });
   }
 
   async logout(): Promise<void> {

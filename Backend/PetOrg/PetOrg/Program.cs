@@ -15,9 +15,19 @@ var keycloakOptions = keycloakSection.Get<KeycloakOptions>() ?? new KeycloakOpti
 const string DefaultConnectionStringName = "Default";
 const string PostgresHealthCheckName = "postgres";
 const string ReadinessTag = "ready";
+const string LocalFrontendCorsPolicy = "LocalFrontendCors";
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(LocalFrontendCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 builder.Services.AddOptions<KeycloakOptions>()
     .Bind(keycloakSection)
     .Validate(options => KeycloakOptionsValidator.Validate(options).Count == 0, "Keycloak authentication configuration is incomplete.");
@@ -65,8 +75,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
+app.UseCors(LocalFrontendCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();

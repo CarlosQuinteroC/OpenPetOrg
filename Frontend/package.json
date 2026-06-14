@@ -6,6 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "measure:baseline": "node ./scripts/bundle-metrics.mjs --label baseline --out .bundle-metrics/baseline.json",
+    "measure:phase1": "node ./scripts/bundle-metrics.mjs --label phase1 --out .bundle-metrics/phase1.json",
+    "measure:phase2": "node ./scripts/bundle-metrics.mjs --label phase2 --out .bundle-metrics/phase2.json",
+    "measure:check:phase1": "node ./scripts/bundle-threshold-check.mjs --baseline .bundle-metrics/baseline.json --candidate .bundle-metrics/phase1.json --candidate-label phase1 --out .bundle-metrics/threshold-phase1.json",
+    "measure:check:phase2": "node ./scripts/bundle-threshold-check.mjs --baseline .bundle-metrics/baseline.json --candidate .bundle-metrics/phase2.json --candidate-label phase2 --out .bundle-metrics/threshold-phase2.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest"

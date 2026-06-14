@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { lazy, type ComponentType } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ThemeProvider, createTheme } from '@mui/material'
 import { AppShell } from './AppShell'
@@ -52,5 +53,33 @@ describe('AppShell', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Logout' }))
 
     expect(logout).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows scoped fallback while lazy route content is loading', async () => {
+    const LazyDashboard = lazy(
+      async () =>
+        new Promise<{ default: ComponentType }>((resolve) => {
+          setTimeout(() => {
+            resolve({
+              default: () => <div>Lazy protected dashboard</div>,
+            })
+          }, 0)
+        }),
+    )
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <MemoryRouter initialEntries={['/app/dashboard']}>
+          <Routes>
+            <Route path="/app" element={<AppShell />}>
+              <Route path="dashboard" element={<LazyDashboard />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>,
+    )
+
+    expect(await screen.findByRole('progressbar', { name: 'Loading route content' })).toBeInTheDocument()
+    expect(await screen.findByText('Lazy protected dashboard')).toBeInTheDocument()
   })
 })

@@ -1,7 +1,9 @@
 import { alpha, AppBar, Box, Button, Container, Stack, Toolbar, Typography, useTheme } from '@mui/material'
+import { Suspense } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuthBootstrap } from '../../app/auth/authBootstrapContext'
 import { ThemeControls } from '../../app/theme/ThemeControls'
+import { RouteContentFallback } from './RouteContentFallback'
 
 const navItems = [
   { to: '/app/donations/new', label: 'Donation Intake' },
@@ -84,7 +86,9 @@ export function AppShell() {
             backgroundColor: alpha(theme.palette.background.paper, theme.palette.mode === 'dark' ? 0.9 : 1),
           }}
         >
-          <Outlet />
+          <Suspense fallback={<RouteContentFallback />}>
+            <Outlet />
+          </Suspense>
         </Box>
       </Container>
     </>

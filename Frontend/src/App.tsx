@@ -1,12 +1,16 @@
+import { lazy } from 'react'
 import { Box } from '@mui/material'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { DonationFormPage } from './features/donations/DonationFormPage'
-import { ReconciliationQueuePage } from './features/reconciliation/ReconciliationQueuePage'
-import { DonorDashboardPage } from './features/dashboard/DonorDashboardPage'
-import { AnimalCaseTimelinePage } from './features/animal-cases/AnimalCaseTimelinePage'
 import { LandingPage } from './features/landing/LandingPage'
 import { AppShell } from './features/shell/AppShell'
 import { ProtectedRoute } from './app/routing/ProtectedRoute'
+
+const DonationFormPage = lazy(() => import('./features/donations/DonationFormPage').then((module) => ({ default: module.DonationFormPage })))
+const ReconciliationQueuePage = lazy(() => import('./features/reconciliation/ReconciliationQueuePage').then((module) => ({ default: module.ReconciliationQueuePage })))
+const DonorDashboardPage = lazy(() => import('./features/dashboard/DonorDashboardPage').then((module) => ({ default: module.DonorDashboardPage })))
+const AnimalCaseTimelinePage = lazy(() =>
+  import('./features/animal-cases/AnimalCaseTimelinePage').then((module) => ({ default: module.AnimalCaseTimelinePage })),
+)
 
 function App() {
   return (

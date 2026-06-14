@@ -1,0 +1,13 @@
+{
+  "baselineLabel": "baseline",
+  "candidateLabel": "phase1",
+  "baselineEntryFile": "assets/index-Dm_zbmRU.js",
+  "candidateEntryFile": "assets/index-BOjFc3uT.js",
+  "baselineRawBytes": 527737,
+  "candidateRawBytes": 280296,
+  "deltaBytes": -247441,
+  "deltaPercent": -46.89,
+  "pass": true,
+  "reason": "PASS: candidate entry bundle is under 500 kB",
+  "generatedAt": "2026-06-14T01:01:57.343Z"
+}
